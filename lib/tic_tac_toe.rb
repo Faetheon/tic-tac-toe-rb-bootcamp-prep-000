@@ -108,7 +108,7 @@ def won?(board)
 end
 
 def full?(board)
-  if draw?(board)
+  if turn_count(board) >= board.length
     return true
   else
     return false
