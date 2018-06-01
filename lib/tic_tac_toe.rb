@@ -25,17 +25,6 @@ def display_board(board)
   puts " #{board[6]} | #{board[7]} | #{board[8]} "
 end
 
-# def position_taken?(board)
-#   pos = input_to_index(gets.strip)
-#   if pos == Integer && pos < 9
-#     if board[pos] === " "
-#       return false
-#     end
-#   else
-#     return true
-#   end
-# end
-
 def turn_count(board)
   return board.join.gsub(/\s+/, "").length
 end
@@ -61,43 +50,28 @@ def valid_move?(board, pos)
 end
 
 def move(board, index, x)
-  if valid_move?(board, index) === true
-    return board[index] = x
-  end
+  board[index.to_i] = x
 end
 
 def turn(board)
-  pos = input_to_index(gets.strip)
-  while pos < 0 || pos >= board.length
-    pos = input_to_index(gets.strip)
+  user_input = gets.strip.to_i
+  user_input = input_to_index(user_input)
+  
+  if valid_move?(board, user_input)
+    move(board, user_input, current_player)
+    display_board(board)
+  else
+    turn
   end
-  player = current_player(board)
-  return move(board, pos, player)
 end
 
 def play(board)
-  player_won = ""
-  while over?(board) === false
-    puts " #{board[0]} | #{board[1]} | #{board[2]} "
-    puts "-----------"
-    puts " #{board[3]} | #{board[4]} | #{board[5]} "
-    puts "-----------"
-    puts " #{board[6]} | #{board[7]} | #{board[8]} "
-    turn(board)
-    if over?(board) === true && draw?(board) != true && current_player(board) === "X"
-      player_won = "O wins!"
-    elsif draw?(board) != true
-      player_won = "X wins!"
-    else
-      player_won = "Draw!"
+  turn(board) until over?(board) || draw?(board)
+    if draw?(board)
+      puts "Cat's Game!"
+    elsif won?(board)
+      puts "Congratulations #{winner}!"
     end
-  end
-  puts " #{board[0]} | #{board[1]} | #{board[2]} "
-  puts "-----------"
-  puts " #{board[3]} | #{board[4]} | #{board[5]} "
-  puts "-----------"
-  puts " #{board[6]} | #{board[7]} | #{board[8]} "
-  return "#{player_won}"
 end
 
 def won?(board)
@@ -142,24 +116,11 @@ def full?(board)
 end
 
 def draw?(board)
-  draw = false
-  won = WIN_COMBINATIONS.each { |win|
-    counter = 0
-    if won?(board) === win
-      break true
-    end
-  }
-  if won.is_a?(Array)
-    won = false
+  if full?(board) && won?(board) == false
+    return true
+  else
+    return false
   end
-  board.each { |pos|
-    if pos === " " || won
-      break draw = false
-    else
-      draw = true
-    end
-  }
-  return draw
 end
 
 def over?(board)
