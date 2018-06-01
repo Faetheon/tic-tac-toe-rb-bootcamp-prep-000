@@ -115,7 +115,7 @@ def over?(board)
 end
 
 def full?(board)
-  if turn_count(board) >= @board.length
+  if turn_count(board) >= board.length
     return true
   else
     return false
