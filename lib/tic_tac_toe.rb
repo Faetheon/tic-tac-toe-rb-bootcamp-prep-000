@@ -49,7 +49,7 @@ def turn(board)
   user_input = input_to_index(user_input)
   
   if valid_move?(board, user_input)
-    move(board, user_input, current_player)
+    move(board, user_input, current_player(board))
     display_board(board)
   else
     turn(board)
